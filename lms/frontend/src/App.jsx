@@ -1,0 +1,56 @@
+import { Routes, Route } from "react-router-dom";
+import "./App.css";
+import LandingPage from "./pages/Common/LandingPage";
+import AboutUs from "./pages/Common/AboutUs";
+import ContactUs from "./pages/Common/ContactUs";
+import Login from "./pages/Common/Login";
+import Register from "./pages/Common/Register";
+import Student_Home from "./pages/Student/Student_Home";
+import Instructor_Home from "./pages/Instructor/Instructor_Home";
+import Student_Profile from "./pages/Student/Student_Profile";
+import UpdateProfile from "./pages/Student/UpdateProfile";
+import Instructor_Profile from "./pages/Instructor/Instructor_Profile";
+import UpdateInstructorProfile from "./pages/Instructor/UpdateInstructorProfile";
+import Add_Course from "./pages/Instructor/Add_Course";
+import Manage_Courses from "./pages/Instructor/Manage_Courses";
+import AddLecture from "./pages/Instructor/Add_Lecture";
+import Course_Details from "./pages/Instructor/Course_Details";
+function App() {
+  return (
+    <>
+      <Routes>
+        <Route path="/" element={<LandingPage></LandingPage>}></Route>
+        <Route path="/aboutus" element={<AboutUs></AboutUs>}></Route>
+        <Route path="/contactus" element={<ContactUs></ContactUs>}></Route>
+        <Route path="/login" element={<Login></Login>}></Route>
+        <Route path="/register" element={<Register></Register>}></Route>
+
+        {/* student routes */}
+        <Route path="/auth/student-home" element={<Student_Home />}></Route>
+        <Route path="/profile" element={<Student_Profile />}></Route>
+        <Route path="/update" element={<UpdateProfile />} />
+
+        {/* instructor routes */}
+        <Route
+          path="/auth/instructor-home"
+          element={<Instructor_Home />}
+        ></Route>
+
+        <Route
+          path="/instructor-profile"
+          element={<Instructor_Profile />}
+        ></Route>
+        <Route
+          path="/update-instructor-profile"
+          element={<UpdateInstructorProfile />}
+        ></Route>
+        <Route path="/create-course" element={<Add_Course />}></Route>
+        <Route path="/manage-courses" element={<Manage_Courses />}></Route>
+        <Route path="/add-lecture/:courseId" element={<AddLecture />} />
+        <Route path="/course-details/:courseId" element={<Course_Details />} />
+      </Routes>
+    </>
+  );
+}
+
+export default App;
