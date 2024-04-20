@@ -8,6 +8,7 @@ const UpdateProfile = () => {
   const [formData, setFormData] = useState({
     fullName: "",
     email: "",
+    password: "",
     dob: "",
     gender: "",
     fieldOfInterest: "",
@@ -33,6 +34,7 @@ const UpdateProfile = () => {
       setFormData({
         fullName: userData.fullName,
         email: userData.email,
+        password: userData.password,
         dob: userData.dob,
         gender: userData.gender,
         fieldOfInterest: userData.fieldOfInterest,
@@ -136,7 +138,7 @@ const UpdateProfile = () => {
                     id="newPassword"
                     name="password"
                     placeholder="enter new password"
-                    //value={formData.password}
+                    // value={formData.password}
                     onChange={handleChange}
                     className="mt-1 px-3 py-2 border border-gray-300 rounded-md w-full focus:outline-none focus:ring-blue-500 focus:border-blue-500"
                   />

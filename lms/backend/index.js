@@ -289,12 +289,13 @@ app.get("/profile", verifyToken, async (req, res) => {
   try {
     const userId = req.user.userId;
 
-    const student = await Students.findById(userId).select("-password");
+    // const student = await Students.findById(userId).select("-password");
+    const student = await Students.findById(userId);
 
     if (!student) {
       return res.status(404).json({ error: "Student profile not found" });
     }
-
+    console.log(student);
     res.json(student);
   } catch (error) {
     console.error("Error fetching student profile:", error.message);
@@ -328,16 +329,29 @@ app.put("/update", verifyToken, async (req, res) => {
     const userId = req.user.userId;
     const updatedFields = req.body;
     console.log(updatedFields);
+
+    // //first we convert the updated password to the hashpassword
+    // const hashedPassword = await bcrypt.hash(updatedFields.password, 10);
+    
+
+    // const student = await Students.findByIdAndUpdate(userId, updatedFields, {
+    //   new: true,
+    // });
+    // Hash the updated password
     const hashedPassword = await bcrypt.hash(updatedFields.password, 10);
 
-    const student = await Students.findByIdAndUpdate(userId, updatedFields, {
-      new: true,
-    });
+// Update the password field in updatedFields with the hashed password
+    updatedFields.password = hashedPassword;
+
+// Update the student document in the database with the updatedFields
+const student = await Students.findByIdAndUpdate(userId, updatedFields, {
+  new: true,
+});
 
     if (!student) {
       return res.status(404).json({ error: "Student not found" });
     }
-
+    console.log(student);
     res.status(200).json({
       message: "Student profile updated successfully",
       data: student,
