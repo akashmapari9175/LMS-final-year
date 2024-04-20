@@ -15,6 +15,7 @@ import Add_Course from "./pages/Instructor/Add_Course";
 import Manage_Courses from "./pages/Instructor/Manage_Courses";
 import AddLecture from "./pages/Instructor/Add_Lecture";
 import Course_Details from "./pages/Instructor/Course_Details";
+import ForgotPassword from "./pages/Common/ForgotPassword";
 function App() {
   return (
     <>
@@ -48,6 +49,12 @@ function App() {
         <Route path="/manage-courses" element={<Manage_Courses />}></Route>
         <Route path="/add-lecture/:courseId" element={<AddLecture />} />
         <Route path="/course-details/:courseId" element={<Course_Details />} />
+
+        {/* this is for the forget password  */}
+        <Route
+          path="/forgot-password"
+          element={<ForgotPassword></ForgotPassword>}
+        />
       </Routes>
     </>
   );

@@ -11,6 +11,7 @@ const cloudinary = require("cloudinary").v2;
 const Lecture = require("./models/Lectures");
 const multer = require("multer");
 const nodemailer = require("nodemailer");
+const Student = require("./models/Students");
 const app = express();
 
 app.use(express.json());
@@ -49,97 +50,6 @@ cloudinary.config({
   upload_preset: "thumbnail_preset", // Add this line
 });
 
-// app.post("/register", async (req, res) => {
-//   try {
-//     const {
-//       fullName,
-//       email,
-//       password,
-//       confirmPassword,
-//       userType,
-//       dob,
-//       gender,
-//       fieldOfInterest,
-//       bio,
-//       contactNumber,
-//       subject,
-//       qualifications,
-//       experience,
-//       languages,
-//       location,
-//     } = req.body;
-
-//     // Check if password and confirm password match
-//     if (password !== confirmPassword) {
-//       return res.status(400).json({ error: "Passwords do not match" });
-//     }
-
-//     if (
-//       userType === "instructor" &&
-//       (!contactNumber ||
-//         contactNumber.length !== 10 ||
-//         !/^\d+$/.test(contactNumber))
-//     ) {
-//       return res.status(400).json({
-//         error: "Instructor contact number must be exactly 10 digits long",
-//       });
-//     }
-
-//     // Check if the user already exists based on email and userType
-//     const existingUser = await (userType === "student"
-//       ? Students.findOne({ email })
-//       : Instructor.findOne({ email }));
-
-//     if (existingUser) {
-//       return res
-//         .status(400)
-//         .json({ error: "Email address already registered" });
-//     }
-
-//     // Hash the password before saving
-//     const hashedPassword = await bcrypt.hash(password, 10);
-
-//     let newUser;
-//     if (userType === "student") {
-//       newUser = new Students({
-//         fullName,
-//         email,
-//         password: hashedPassword,
-//         dob,
-//         gender,
-//         fieldOfInterest,
-//         bio,
-//         userType,
-//       });
-//     } else if (userType === "instructor") {
-//       newUser = new Instructor({
-//         fullName,
-//         contactNumber,
-//         email,
-//         password: hashedPassword,
-//         subject,
-//         qualifications,
-//         experience,
-//         languages,
-//         location,
-//         bio,
-//         userType,
-//       });
-//     } else {
-//       return res.status(400).json({ error: "Invalid userType" });
-//     }
-
-//     // Save the new user to the database
-//     await newUser.save();
-
-//     res.status(201).json({ message: "Registered successfully!" });
-//   } catch (error) {
-//     console.error("Error registering user:", error);
-//     res
-//       .status(500)
-//       .json({ error: "Registration failed. Please try again later." });
-//   }
-// });
 
 // User login endpoint
 
@@ -567,6 +477,156 @@ app.post("/send-email", (req, res) => {
       res.status(200).send("Email sent successfully");
     }
   });
+});
+
+
+//thsi is for the forget password 
+
+
+// const express = require("express");
+ const bodyParser = require("body-parser");
+// const nodemailer = require("nodemailer");
+ const randomize = require("randomatic");
+
+// const app = express();
+
+// // Middleware
+ app.use(bodyParser.json());
+
+// Initialize nodemailer transporter
+const transporter = nodemailer.createTransport({
+  service: "gmail",
+  auth: {
+    user: "akashofficial9933@gmail.com",
+    pass: "vugiitapckvmzwxa",
+  },
+});
+
+// Import your database model here
+// already imported as Student
+
+// Temporary storage for OTPs (in a real-world scenario, use a database for storage)
+const otpStorage = {};
+
+// Endpoint to handle sending OTP
+app.post("/send-otp", async (req, res) => {
+  const { email } = req.body;
+
+  try {
+    // Check if the email exists in the database
+    const student = await Student.findOne({ email });
+    if (!student) {
+      return res.status(404).json({ message: "student not found." });
+    }
+
+    // Generate a 4-digit code
+    const otp = randomize("0", 4);
+
+    // Store the OTP in temporary storage
+    otpStorage[email] = otp;
+
+    // Send the OTP to the user's email
+    const mailOptions = {
+      from: "akashofficial9933@gmail.com",
+      to: email,
+      subject: "OTP for Password Reset",
+      text: `Your OTP for password reset is: ${otp}`,
+    };
+
+    transporter.sendMail(mailOptions, (error, info) => {
+      if (error) {
+        console.log("Error sending email:", error);
+        return res.status(500).json({ message: "Failed to send OTP." });
+      }
+      console.log("OTP sent:", info.response);
+      // Store the OTP in a database or in memory for verification later
+      // For simplicity, we'll just send the OTP back to the client for now
+      res.json({ otp });
+    });
+  } catch (error) {
+    console.log("Error finding user:", error);
+    return res.status(500).json({ message: "Internal server error." });
+  }
+});
+
+// Endpoint to verify OTP and reset password
+// app.post("/12verify-otp", async (req, res) => {
+//   const { email, otp, newPassword } = req.body;
+//   console.log(`sned otp is ${storedOtp} and student entered opt is ${otp}`);
+//   try {
+//     // Find the user by email
+//     const student = await Student.findOne({ email });
+//     if (!student) {
+//       return res.status(404).json({ message: "User not found." });
+//     }
+//     console.log(student);
+//  // Retrieve the OTP from temporary storage
+//  const storedOtp = otpStorage[email];
+
+//  if (!storedOtp) {
+//    return res.status(400).json({ message: "OTP not found." });
+//  }
+
+//  // Check if the entered OTP matches the stored OTP
+//  if (otp !== storedOtp) {
+//    return res.status(400).json({ message: "Invalid OTP." });
+//  }
+
+//  // Delete the OTP from temporary storage
+//  delete otpStorage[email];
+
+
+
+//     // Update the user's password
+//     student.password = newPassword;
+   
+//     await student.save();
+
+//     // For demonstration purposes, we'll just send a success message
+//     res.json({ message: "Password reset successful." });
+//   } catch (error) {
+//     console.log("Error finding student:", error);
+//     return res.status(500).json({ message: "Internal server error." });
+//   }
+// });
+// Assuming this is the correct route for handling OTP verification
+app.post("/verify-otp", async (req, res) => {
+  const { email, otp, newPassword } = req.body;
+
+  try {
+    // Find the user by email
+    const student = await Student.findOne({ email });
+    if (!student) {
+      return res.status(404).json({ message: "User not found." });
+    }
+
+    // Retrieve the OTP from temporary storage
+    const storedOtp = otpStorage[email];
+
+    if (!storedOtp) {
+      return res.status(400).json({ message: "OTP not found." });
+    }
+
+    // Check if the entered OTP matches the stored OTP
+    if (otp !== storedOtp) {
+      return res.status(400).json({ message: "Invalid OTP." });
+    }
+
+    // Delete the OTP from temporary storage
+    delete otpStorage[email];
+
+    // Update the user's password
+    const hashedPassword = await bcrypt.hash(newPassword, 10);
+    student.password = hashedPassword;
+   
+    await student.save();
+
+    // For demonstration purposes, we'll just send a success message
+    res.json({ message: "Password reset successful." });
+  } catch (error) {
+    console.log("Error finding student:", error);
+    return res.status(500).json({ message: "Internal server error." });
+  }
 });
 
 
