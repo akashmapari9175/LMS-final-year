@@ -5,7 +5,7 @@ const AboutUs = () => {
   return (
     <div>
       <Navbar></Navbar>
-      about us
+      about us akash
     </div>
   );
 };
