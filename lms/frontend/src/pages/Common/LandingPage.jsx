@@ -1,6 +1,7 @@
 import React, { useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import Navbar from "../../components/Navbar";
+import Home from "../Home";
 
 const LandingPage = () => {
   const navigate = useNavigate(); // Using useNavigate hook for navigation
@@ -14,7 +15,8 @@ const LandingPage = () => {
   return (
     <div>
       <Navbar />
-      {/* Your landing page content goes here */}
+
+      <Home></Home>
     </div>
   );
 };
