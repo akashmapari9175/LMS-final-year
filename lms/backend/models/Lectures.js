@@ -16,7 +16,10 @@ const lectureSchema = new Schema({
     ref: "Course",
     required: true,
   },
-
+  section: {
+    type: String,
+    required: true,
+  },
   videoUrl: {
     type: String,
     required: true,

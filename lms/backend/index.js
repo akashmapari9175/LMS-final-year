@@ -50,7 +50,6 @@ cloudinary.config({
   upload_preset: "thumbnail_preset", // Add this line
 });
 
-
 // User login endpoint
 
 app.post("/register", async (req, res) => {
@@ -242,7 +241,6 @@ app.put("/update", verifyToken, async (req, res) => {
 
     // //first we convert the updated password to the hashpassword
     // const hashedPassword = await bcrypt.hash(updatedFields.password, 10);
-    
 
     // const student = await Students.findByIdAndUpdate(userId, updatedFields, {
     //   new: true,
@@ -250,13 +248,13 @@ app.put("/update", verifyToken, async (req, res) => {
     // Hash the updated password
     const hashedPassword = await bcrypt.hash(updatedFields.password, 10);
 
-// Update the password field in updatedFields with the hashed password
+    // Update the password field in updatedFields with the hashed password
     updatedFields.password = hashedPassword;
 
-// Update the student document in the database with the updatedFields
-const student = await Students.findByIdAndUpdate(userId, updatedFields, {
-  new: true,
-});
+    // Update the student document in the database with the updatedFields
+    const student = await Students.findByIdAndUpdate(userId, updatedFields, {
+      new: true,
+    });
 
     if (!student) {
       return res.status(404).json({ error: "Student not found" });
@@ -271,8 +269,6 @@ const student = await Students.findByIdAndUpdate(userId, updatedFields, {
     res.status(500).json({ error: "Server error" });
   }
 });
-
-
 
 // Update instructor profile endpoint
 app.put("/update-instructor-profile", verifyToken, async (req, res) => {
@@ -369,37 +365,93 @@ app.delete("/manage-courses/:id", verifyToken, async (req, res) => {
 });
 
 // POST route to add a new lecture to a course
+// app.post("/add-lecture/:courseId", verifyToken, async (req, res) => {
+//   try {
+//     const { title, description, videoUrl } = req.body;
+//     const { courseId } = req.params; // Extract courseId from URL params
+//     console.log(courseId);
+
+//     // Check if required fields are present
+//     if (!title || !description || !videoUrl || !courseId) {
+//       return res.status(400).json({
+//         message: "Title, description, videoUrl, and courseId are required",
+//       });
+//     }
+
+//     // Check if the course exists
+//     const course = await Course.findById(courseId);
+//     if (!course) {
+//       return res.status(404).json({ message: "Course not found" });
+//     }
+
+//     // Create a new lecture associated with the specified course
+//     const newLecture = new Lecture({
+//       title,
+//       description,
+//       videoUrl,
+//       course: courseId, // Associate the lecture with the specified course
+//     });
+
+//     // Save the new lecture
+//     await newLecture.save();
+
+//     // Add the lecture to the course's lectures array
+//     course.lectures.push(newLecture._id);
+//     await course.save();
+
+//     res.status(201).json({
+//       message: "Lecture added successfully",
+//       lecture: newLecture,
+//     });
+//   } catch (error) {
+//     console.error("Error adding lecture:", error.message);
+//     res.status(500).json({ message: "Server error" });
+//   }
+// });
+// app.get("/course-details/:courseId", async (req, res) => {
+//   const { courseId } = req.params;
+//   try {
+//     const lectures = await Lecture.find({ course: courseId });
+
+//     if (!lectures || lectures.length === 0) {
+//       return res
+//         .status(404)
+//         .json({ message: "No lectures found for this course" });
+//     }
+
+//     res.status(200).json({ lectures });
+//   } catch (error) {
+//     console.error("Error fetching lectures:", error);
+//     res.status(500).json({ message: "Internal server error" });
+//   }
+// });
 app.post("/add-lecture/:courseId", verifyToken, async (req, res) => {
   try {
-    const { title, description, videoUrl } = req.body;
-    const { courseId } = req.params; // Extract courseId from URL params
-    console.log(courseId);
+    const { title, description, videoUrl, section } = req.body;
+    const { courseId } = req.params;
 
-    // Check if required fields are present
-    if (!title || !description || !videoUrl || !courseId) {
+    if (!title || !description || !videoUrl || !courseId || !section) {
       return res.status(400).json({
-        message: "Title, description, videoUrl, and courseId are required",
+        message:
+          "Title, description, videoUrl, courseId, and section are required",
       });
     }
 
-    // Check if the course exists
     const course = await Course.findById(courseId);
     if (!course) {
       return res.status(404).json({ message: "Course not found" });
     }
 
-    // Create a new lecture associated with the specified course
     const newLecture = new Lecture({
       title,
       description,
       videoUrl,
-      course: courseId, // Associate the lecture with the specified course
+      course: courseId,
+      section,
     });
 
-    // Save the new lecture
     await newLecture.save();
 
-    // Add the lecture to the course's lectures array
     course.lectures.push(newLecture._id);
     await course.save();
 
@@ -412,9 +464,11 @@ app.post("/add-lecture/:courseId", verifyToken, async (req, res) => {
     res.status(500).json({ message: "Server error" });
   }
 });
+
 app.get("/course-details/:courseId", async (req, res) => {
   const { courseId } = req.params;
   try {
+    // Fetch all lectures for the specified course
     const lectures = await Lecture.find({ course: courseId });
 
     if (!lectures || lectures.length === 0) {
@@ -423,7 +477,23 @@ app.get("/course-details/:courseId", async (req, res) => {
         .json({ message: "No lectures found for this course" });
     }
 
-    res.status(200).json({ lectures });
+    // Group lectures by section
+    const lecturesBySection = {};
+    lectures.forEach((lecture) => {
+      const sectionName = lecture.section || "Uncategorized";
+      if (!lecturesBySection[sectionName]) {
+        lecturesBySection[sectionName] = [];
+      }
+      lecturesBySection[sectionName].push(lecture);
+    });
+
+    // Convert object to array of sections
+    const sections = Object.keys(lecturesBySection).map((sectionName) => ({
+      name: sectionName,
+      lectures: lecturesBySection[sectionName],
+    }));
+
+    res.status(200).json({ sections });
   } catch (error) {
     console.error("Error fetching lectures:", error);
     res.status(500).json({ message: "Internal server error" });
@@ -441,7 +511,6 @@ app.get("/auth/student-home", async (req, res) => {
   }
 });
 
-
 app.post("/send-email", (req, res) => {
   const { name, email, message } = req.body;
 
@@ -451,12 +520,11 @@ app.post("/send-email", (req, res) => {
       Configure your email transport settings here.
       For example, for Gmail, you can use the following:
       */
-      service: 'gmail',
-      auth: {
-        user: 'akashofficial9933@gmail.com',
-        pass: 'vugiitapckvmzwxa'
-      }
-   
+    service: "gmail",
+    auth: {
+      user: "akashofficial9933@gmail.com",
+      pass: "vugiitapckvmzwxa",
+    },
   });
 
   // Setup email data with unicode symbols
@@ -464,7 +532,7 @@ app.post("/send-email", (req, res) => {
     from: `"Contact Form" <${email}>`,
     to: "akashofficial9933@gmail.com", // Change this to your email address
     subject: "New Contact Form Submission",
-    text: `Name: ${name}\nEmail: ${email}\nMessage: ${message}`
+    text: `Name: ${name}\nEmail: ${email}\nMessage: ${message}`,
   };
 
   // Send mail with defined transport object
@@ -479,19 +547,17 @@ app.post("/send-email", (req, res) => {
   });
 });
 
-
-//thsi is for the forget password 
-
+//thsi is for the forget password
 
 // const express = require("express");
- const bodyParser = require("body-parser");
+const bodyParser = require("body-parser");
 // const nodemailer = require("nodemailer");
- const randomize = require("randomatic");
+const randomize = require("randomatic");
 
 // const app = express();
 
 // // Middleware
- app.use(bodyParser.json());
+app.use(bodyParser.json());
 
 // Initialize nodemailer transporter
 const transporter = nodemailer.createTransport({
@@ -575,11 +641,9 @@ app.post("/send-otp", async (req, res) => {
 //  // Delete the OTP from temporary storage
 //  delete otpStorage[email];
 
-
-
 //     // Update the user's password
 //     student.password = newPassword;
-   
+
 //     await student.save();
 
 //     // For demonstration purposes, we'll just send a success message
@@ -618,7 +682,7 @@ app.post("/verify-otp", async (req, res) => {
     // Update the user's password
     const hashedPassword = await bcrypt.hash(newPassword, 10);
     student.password = hashedPassword;
-   
+
     await student.save();
 
     // For demonstration purposes, we'll just send a success message
@@ -629,11 +693,40 @@ app.post("/verify-otp", async (req, res) => {
   }
 });
 
+app.get("/student/count", async (req, res) => {
+  try {
+    const count = await Student.countDocuments();
+    res.status(200).json({ count });
+  } catch (error) {
+    console.error("Error fetching students count:", error);
+    res.status(500).json({ message: "Internal server error" });
+  }
+});
 
+app.get("/course/count", async (req, res) => {
+  try {
+    const count = await Course.countDocuments();
+    res.status(200).json({ count });
+  } catch (error) {
+    console.error("Error fetching courses count:", error);
+    res.status(500).json({ message: "Internal server error" });
+  }
+});
 
+app.get("/instructor/count", async (req, res) => {
+  try {
+    const count = await Instructor.countDocuments();
+    res.status(200).json({ count });
+  } catch (error) {
+    console.error("Error fetching instructors count:", error);
+    res.status(500).json({ message: "Internal server error" });
+  }
+});
 
 // MongoDB connection
-connectDB("mongodb+srv://akashmapari:root@cluster0.3bxf127.mongodb.net/?retryWrites=true&w=majority&appName=lms")
+connectDB(
+  "mongodb+srv://akashmapari:root@cluster0.3bxf127.mongodb.net/?retryWrites=true&w=majority&appName=lms"
+)
   .then(() => console.log("Database connected successfully!"))
   .catch((error) => console.log("Database connection error!", error));
 
