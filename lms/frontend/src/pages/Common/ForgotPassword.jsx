@@ -9,6 +9,7 @@ const ForgotPassword = () => {
   const [newPassword, setNewPassword] = useState("");
   const [error, setError] = useState("");
   const [successMessage, setSuccessMessage] = useState("");
+  const [showPassword, setShowPassword] = useState(false);
 
   const handleSendOtp = async (e) => {
     e.preventDefault();
@@ -24,6 +25,10 @@ const ForgotPassword = () => {
       setError("Failed to send OTP. Please try again.");
       setSuccessMessage("");
     }
+  };
+
+  const handleTogglePassword = () => {
+    setShowPassword(!showPassword);
   };
 
   const handleResetPassword = async (e) => {
@@ -111,7 +116,7 @@ const ForgotPassword = () => {
                   required
                 />
               </div>
-              <div className="mb-4">
+              <div className="mb-4 relative">
                 <label
                   htmlFor="password"
                   className="block text-sm font-medium text-gray-700"
@@ -119,7 +124,7 @@ const ForgotPassword = () => {
                   New Password
                 </label>
                 <input
-                  type="text"
+                  type={showPassword ? "text" : "password"}
                   id="password"
                   name="password"
                   value={newPassword}
@@ -128,6 +133,13 @@ const ForgotPassword = () => {
                   className="w-full mt-1 py-2 px-3 border rounded-md focus:outline-none focus:border-blue-500"
                   required
                 />
+                <button
+                  type="button"
+                  className="absolute inset-y-0 mt-5 right-0 px-3 py-2"
+                  onClick={handleTogglePassword}
+                >
+                  {showPassword ? "Hide" : "Show"}
+                </button>
               </div>
             </div>
             {/* 

@@ -1,3 +1,4 @@
+const dotenv = require("dotenv").config();
 const express = require("express");
 const mongoose = require("mongoose");
 const connectDB = require("./Connection");
@@ -17,7 +18,7 @@ const app = express();
 app.use(express.json());
 app.use(cors());
 
-const secretKey = "secret-key"; // Define a secure secret key for JWT
+const secretKey = process.env.SECRETKEY;
 
 const verifyToken = (req, res, next) => {
   const token = req.headers.authorization;
@@ -44,14 +45,13 @@ const verifyToken = (req, res, next) => {
 };
 
 cloudinary.config({
-  cloud_name: "ddthfysqt",
-  api_key: "457621447197236",
-  api_secret: "bRZHVznYitTL9jUn_rDNUdQ1xlQ",
-  upload_preset: "thumbnail_preset", // Add this line
+  cloud_name: process.env.CLOUDINARY_CLOUD_NAME,
+  api_key: process.env.CLOUDINARY_API_KEY,
+  api_secret: process.env.CLOUDINARY_API_SECRET,
+  upload_preset: process.env.CLOUDINARY_UPLOAD_PRESET,
 });
 
 // User login endpoint
-
 app.post("/register", async (req, res) => {
   try {
     const {
@@ -730,7 +730,7 @@ connectDB(
   .then(() => console.log("Database connected successfully!"))
   .catch((error) => console.log("Database connection error!", error));
 
-const PORT = process.env.PORT || 5000;
+const PORT = process.env.PORT;
 app.listen(PORT, () => {
   console.log(`Server is running on port ${PORT}`);
 });
