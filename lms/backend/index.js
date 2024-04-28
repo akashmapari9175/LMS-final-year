@@ -511,6 +511,17 @@ app.get("/auth/student-home", async (req, res) => {
   }
 });
 
+app.get("/", async (req, res) => {
+  try {
+    const courses = await Course.find();
+    res.json(courses);
+    console.log(courses);
+  } catch (error) {
+    console.error("Error fetching courses:", error);
+    res.status(500).json({ message: "Internal server error" });
+  }
+});
+
 app.post("/send-email", (req, res) => {
   const { name, email, message } = req.body;
 
@@ -615,44 +626,6 @@ app.post("/send-otp", async (req, res) => {
   }
 });
 
-// Endpoint to verify OTP and reset password
-// app.post("/12verify-otp", async (req, res) => {
-//   const { email, otp, newPassword } = req.body;
-//   console.log(`sned otp is ${storedOtp} and student entered opt is ${otp}`);
-//   try {
-//     // Find the user by email
-//     const student = await Student.findOne({ email });
-//     if (!student) {
-//       return res.status(404).json({ message: "User not found." });
-//     }
-//     console.log(student);
-//  // Retrieve the OTP from temporary storage
-//  const storedOtp = otpStorage[email];
-
-//  if (!storedOtp) {
-//    return res.status(400).json({ message: "OTP not found." });
-//  }
-
-//  // Check if the entered OTP matches the stored OTP
-//  if (otp !== storedOtp) {
-//    return res.status(400).json({ message: "Invalid OTP." });
-//  }
-
-//  // Delete the OTP from temporary storage
-//  delete otpStorage[email];
-
-//     // Update the user's password
-//     student.password = newPassword;
-
-//     await student.save();
-
-//     // For demonstration purposes, we'll just send a success message
-//     res.json({ message: "Password reset successful." });
-//   } catch (error) {
-//     console.log("Error finding student:", error);
-//     return res.status(500).json({ message: "Internal server error." });
-//   }
-// });
 // Assuming this is the correct route for handling OTP verification
 app.post("/verify-otp", async (req, res) => {
   const { email, otp, newPassword } = req.body;
@@ -720,6 +693,34 @@ app.get("/instructor/count", async (req, res) => {
   } catch (error) {
     console.error("Error fetching instructors count:", error);
     res.status(500).json({ message: "Internal server error" });
+  }
+});
+
+// catergory request on the home page
+app.get("/categories", async (req, res) => {
+  try {
+    const categories = await Course.distinct("category"); // Assuming 'category' is the field in your Course model that stores category information
+    res.json({ categories });
+  } catch (error) {
+    console.error("Error fetching categories:", error);
+    res.status(500).json({ error: "Internal Server Error" });
+  }
+});
+
+// filteration route on the home page
+app.post("/courses/filter", async (req, res) => {
+  const { selectedCategory } = req.body;
+  try {
+    let filteredCourses;
+    if (selectedCategory === "All") {
+      filteredCourses = await Course.find();
+    } else {
+      filteredCourses = await Course.find({ category: selectedCategory });
+    }
+    res.json(filteredCourses);
+  } catch (error) {
+    console.error("Error filtering courses:", error);
+    res.status(500).json({ error: "Internal Server Error" });
   }
 });
 
