@@ -204,7 +204,7 @@ app.get("/profile", verifyToken, async (req, res) => {
     if (!student) {
       return res.status(404).json({ error: "Student profile not found" });
     }
-    console.log(student);
+    // console.log(student);
     res.json(student);
   } catch (error) {
     console.error("Error fetching student profile:", error.message);
@@ -237,7 +237,7 @@ app.put("/update", verifyToken, async (req, res) => {
   try {
     const userId = req.user.userId;
     const updatedFields = req.body;
-    console.log(updatedFields);
+    // console.log(updatedFields);
 
     // //first we convert the updated password to the hashpassword
     // const hashedPassword = await bcrypt.hash(updatedFields.password, 10);
@@ -259,7 +259,7 @@ app.put("/update", verifyToken, async (req, res) => {
     if (!student) {
       return res.status(404).json({ error: "Student not found" });
     }
-    console.log(student);
+    // console.log(student);
     res.status(200).json({
       message: "Student profile updated successfully",
       data: student,
@@ -309,7 +309,7 @@ app.post("/create-course", verifyToken, async (req, res) => {
       imageUrl,
     } = req.body;
     const instructorId = req.user.userId;
-    console.log(instructorId);
+    // console.log(instructorId);
     const newCourse = new Course({
       title,
       description,
@@ -721,6 +721,29 @@ app.post("/courses/filter", async (req, res) => {
   } catch (error) {
     console.error("Error filtering courses:", error);
     res.status(500).json({ error: "Internal Server Error" });
+  }
+});
+
+app.delete("/course-details/:lectureId", async (req, res) => {
+  const { lectureId } = req.params;
+
+  try {
+    // Find the lecture by ID
+    const lecture = await Lecture.findById(lectureId);
+
+    // Check if the lecture exists
+    if (!lecture) {
+      return res.status(404).json({ error: "Lecture not found" });
+    }
+
+    // Delete the lecture
+    await Lecture.findByIdAndDelete(lectureId);
+    console.log(lectureId);
+
+    res.status(200).json({ message: "Lecture deleted successfully" });
+  } catch (error) {
+    console.error("Error deleting lecture:", error.message);
+    res.status(500).json({ error: "Failed to delete lecture" });
   }
 });
 

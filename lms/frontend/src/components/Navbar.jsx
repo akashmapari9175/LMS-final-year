@@ -58,7 +58,7 @@ const Navbar = ({ onCategorySelect }) => {
               <div className="relative">
                 <select
                   onChange={(e) => handleCategoryChange(e.target.value)}
-                  className="block appearance-none w-full bg-transparent text-white py-2 px-4 pr-8 rounded-md leading-tight focus:outline-none focus:border-gray-500"
+                  className="block appearance-none w-[125px] bg-transparent text-white py-2 px-4 pr-8 rounded-md leading-tight focus:outline-none focus:border-gray-500"
                   defaultValue=""
                 >
                   <option value="" disabled className="bg-gray-800">
