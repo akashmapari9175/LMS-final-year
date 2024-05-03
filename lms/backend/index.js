@@ -500,6 +500,41 @@ app.get("/course-details/:courseId", async (req, res) => {
   }
 });
 
+app.get("/student/course-details/:courseId", async (req, res) => {
+  const { courseId } = req.params;
+  try {
+    // Fetch all lectures for the specified course
+    const lectures = await Lecture.find({ course: courseId });
+
+    if (!lectures || lectures.length === 0) {
+      return res
+        .status(404)
+        .json({ message: "No lectures found for this course" });
+    }
+
+    // Group lectures by section
+    const lecturesBySection = {};
+    lectures.forEach((lecture) => {
+      const sectionName = lecture.section || "Uncategorized";
+      if (!lecturesBySection[sectionName]) {
+        lecturesBySection[sectionName] = [];
+      }
+      lecturesBySection[sectionName].push(lecture);
+    });
+
+    // Convert object to array of sections
+    const sections = Object.keys(lecturesBySection).map((sectionName) => ({
+      name: sectionName,
+      lectures: lecturesBySection[sectionName],
+    }));
+
+    res.status(200).json({ sections });
+  } catch (error) {
+    console.error("Error fetching lectures:", error);
+    res.status(500).json({ message: "Internal server error" });
+  }
+});
+
 // Routes
 app.get("/auth/student-home", async (req, res) => {
   try {

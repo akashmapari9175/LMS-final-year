@@ -1,7 +1,6 @@
 import React from "react";
 import InstructorNavbar from "../../components/InstructorNavbar";
 import Banner from "../../components/Banner";
-import FeaturedCourses from "../../components/FeaturedCourses";
 import Testimonials from "../../components/Testimonials";
 import HowItWorks from "../../components/HowItWorks";
 import { useNavigate } from "react-router-dom";

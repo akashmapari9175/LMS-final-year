@@ -16,6 +16,8 @@ import Manage_Courses from "./pages/Instructor/Manage_Courses";
 import AddLecture from "./pages/Instructor/Add_Lecture";
 import Course_Details from "./pages/Instructor/Course_Details";
 import ForgotPassword from "./pages/Common/ForgotPassword";
+import Course_Detailss from "./pages/Student/Course_Detailss";
+import Enrolled_Courses from "./pages/Student/Enrolled_Courses";
 function App() {
   return (
     <>
@@ -30,6 +32,14 @@ function App() {
         <Route path="/auth/student-home" element={<Student_Home />}></Route>
         <Route path="/profile" element={<Student_Profile />}></Route>
         <Route path="/update" element={<UpdateProfile />} />
+        <Route
+          path="/student/course-details/:courseId"
+          element={<Course_Detailss></Course_Detailss>}
+        ></Route>
+        <Route
+          path="/student/enrolled-courses"
+          element={<Enrolled_Courses></Enrolled_Courses>}
+        ></Route>
 
         {/* instructor routes */}
         <Route
