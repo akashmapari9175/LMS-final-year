@@ -173,6 +173,7 @@ app.post("/login", async (req, res) => {
     }
 
     // Generate a JWT token
+    // this is jwt token 
     const token = jwt.sign({ userId: user._id, email }, secretKey, {
       expiresIn: "7d",
     });
