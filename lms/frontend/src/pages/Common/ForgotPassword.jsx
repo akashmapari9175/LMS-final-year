@@ -4,6 +4,7 @@ import Navbar from "../../components/Navbar";
 import { Link, useNavigate } from "react-router-dom";
 
 const ForgotPassword = () => {
+  const [userType, setUserType] = useState("student");
   const [email, setEmail] = useState("");
   const [otp, setOtp] = useState("");
   const [newPassword, setNewPassword] = useState("");
@@ -17,6 +18,7 @@ const ForgotPassword = () => {
       // Make a request to your backend to send the OTP
       const response = await axios.post("http://localhost:5000/send-otp", {
         email,
+        userType,
       });
       console.log(response.data);
       setSuccessMessage(response.data.message);
@@ -34,16 +36,11 @@ const ForgotPassword = () => {
   const handleResetPassword = async (e) => {
     e.preventDefault();
     try {
-      // Make a request to your backend to verify the OTP and reset the password
-      // const response = await axios.post("http://localhost:5000/12verify-otp", {
-      //   email,
-      //   otp,
-      //   newPassword,
-      // });
       const response = await axios.post("http://localhost:5000/verify-otp", {
         email,
         otp,
         newPassword,
+        userType,
       });
       setEmail("");
       setOtp("");
@@ -70,6 +67,25 @@ const ForgotPassword = () => {
           )}
           {error && <p className="text-red-600 text-center mb-4">{error}</p>}
           <form onSubmit={handleResetPassword}>
+            {/* this is for the user type for check the user type */}
+            <div className="mb-4">
+              <label
+                htmlFor="userType"
+                className="block text-sm font-medium text-gray-700"
+              >
+                User Type
+              </label>
+              <select
+                id="userType"
+                name="userType"
+                value={userType}
+                onChange={(e) => setUserType(e.target.value)}
+                className="w-full mt-1 py-2 px-3 border rounded-md focus:outline-none focus:border-blue-500"
+              >
+                <option value="student">Student</option>
+                <option value="instructor">Instructor</option>
+              </select>
+            </div>
             <div className="">
               <div className="mb-4">
                 <label
@@ -98,6 +114,7 @@ const ForgotPassword = () => {
                 </button>
                 {/* <span>{successMessage}</span> */}
               </div>
+
               <div className="mb-4">
                 <label
                   htmlFor="otp"
