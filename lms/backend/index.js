@@ -13,6 +13,11 @@ const Lecture = require("./models/Lectures");
 const multer = require("multer");
 const nodemailer = require("nodemailer");
 const Student = require("./models/Students");
+
+const stripe = require("stripe")(
+  "sk_test_51Obj0YSCbq1NQsLJAnZYP7QPAkruWJpgiCKE3B0lmGnhqgI9lQ01TD987GLMqRABp4PloLBkpjQ66ZvzKZ5UTOa100xdi3MKvl"
+);
+
 const app = express();
 
 app.use(express.json());
@@ -781,6 +786,8 @@ app.delete("/course-details/:lectureId", async (req, res) => {
     res.status(500).json({ error: "Failed to delete lecture" });
   }
 });
+
+// Route to create a Checkout Session
 
 // MongoDB connection
 connectDB(
