@@ -16,7 +16,15 @@ import Manage_Courses from "./pages/Instructor/Manage_Courses";
 import AddLecture from "./pages/Instructor/Add_Lecture";
 import Course_Details from "./pages/Instructor/Course_Details";
 import ForgotPassword from "./pages/Common/ForgotPassword";
+import Course_Detailss from "./pages/Student/Course_Detailss";
+import Enrolled_Courses from "./pages/Student/Enrolled_Courses";
+import Payment from "./pages/Student/Payment";
+
 function App() {
+  // const stripePromise = loadStripe(
+  //   "pk_test_51Obj0YSCbq1NQsLJooddt1DFt4nFGhogXEwlW0CaRrrBUcRJmjZ6023t49uLmTWHjfcN6n9Ur2Y8icalZ7wewUs800EOVPlaEd"
+  // );
+
   return (
     <>
       <Routes>
@@ -30,6 +38,15 @@ function App() {
         <Route path="/auth/student-home" element={<Student_Home />}></Route>
         <Route path="/profile" element={<Student_Profile />}></Route>
         <Route path="/update" element={<UpdateProfile />} />
+        <Route
+          path="/student/course-details/:courseId"
+          element={<Course_Detailss></Course_Detailss>}
+        ></Route>
+        <Route
+          path="/student/enrolled-courses"
+          element={<Enrolled_Courses></Enrolled_Courses>}
+        ></Route>
+        <Route path="/payment/:courseId" element={<Payment></Payment>}></Route>
 
         {/* instructor routes */}
         <Route

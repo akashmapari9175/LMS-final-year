@@ -7,10 +7,12 @@ import FeaturedCourses from "../../components/FeaturedCourses";
 import Testimonials from "../../components/Testimonials";
 import HowItWorks from "../../components/HowItWorks";
 import Footer from "../../components/Footer";
+import { useParams } from "react-router-dom";
 
 const Student_Home = () => {
   const navigate = useNavigate();
   const [courses, setCourses] = useState([]);
+  const { courseId } = useParams();
 
   useEffect(() => {
     const fetchCourses = async () => {
@@ -29,14 +31,18 @@ const Student_Home = () => {
 
   const handleCourseClick = (courseId) => {
     // Redirect to the course details page
-    navigate(`/course-details/${courseId}`);
+    navigate(`/student/course-details/${courseId}`);
   };
 
   return (
     <div>
       <StudentNavbar />
       <Banner />
-      <FeaturedCourses courses={courses} onCourseClick={handleCourseClick} />
+      <FeaturedCourses
+        courseId={courseId}
+        courses={courses}
+        onCourseClick={handleCourseClick}
+      />
       <Testimonials />
       <HowItWorks />
       <Footer></Footer>
