@@ -219,9 +219,10 @@ app.get("/instructor-profile", verifyToken, async (req, res) => {
   try {
     const instructorId = req.user.userId;
 
-    const instructor = await Instructor.findById(instructorId).select(
-      "-password"
-    );
+    // const instructor = await Instructor.findById(instructorId).select(
+    //   "-password"
+    // );
+    const instructor = await Instructor.findById(instructorId);
 
     if (!instructor) {
       return res.status(404).json({ error: "Instructor profile not found" });
@@ -277,6 +278,12 @@ app.put("/update-instructor-profile", verifyToken, async (req, res) => {
   try {
     const instructorId = req.user.userId;
     const updatedFields = req.body;
+
+    const hashedPassword = await bcrypt.hash(updatedFields.password, 10);
+
+    // Update the password field in updatedFields with the hashed password
+    updatedFields.password = hashedPassword;
+
 
     const instructor = await Instructor.findByIdAndUpdate(
       instructorId,
