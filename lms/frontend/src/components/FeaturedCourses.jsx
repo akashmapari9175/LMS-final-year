@@ -1,20 +1,26 @@
-import React from "react";
+import React, { useState } from "react";
 import { motion } from "framer-motion";
 import { useNavigate } from "react-router-dom";
 import { FaStar } from "react-icons/fa"; // Import star icon for rating
 
 const FeaturedCourses = ({ courses, onCourseClick }) => {
+  const token = localStorage.getItem("token");
   const navigate = useNavigate();
+  const [visibleCourses, setVisibleCourses] = useState(6); // Number of courses to display initially
 
   const handleEnrollClick = async (courseId) => {
     navigate(`/payment/${courseId}`);
+  };
+
+  const handleLoadMore = () => {
+    setVisibleCourses((prevVisibleCourses) => prevVisibleCourses + 6); // Load 6 more courses
   };
 
   return (
     <div className="container mx-auto py-8" id="featured-courses">
       <h2 className="text-2xl font-bold mb-4 ml-8">Recently Added</h2>
       <div className="grid grid-cols-1 md:grid-cols-2 p-8 lg:grid-cols-3 gap-8">
-        {courses.map((course) => (
+        {courses.slice(0, visibleCourses).map((course) => (
           <motion.div
             key={course._id}
             className="bg-white rounded-lg shadow-md overflow-hidden flex flex-col"
@@ -45,7 +51,12 @@ const FeaturedCourses = ({ courses, onCourseClick }) => {
               <p className="text-gray-600 mb-2">Duration: {course.duration}</p>
               <div className="flex justify-between mt-auto">
                 <button
-                  onClick={() => onCourseClick(course._id)}
+                  onClick={() => {
+                    onCourseClick(course._id);
+                    {
+                      !token ? navigate("/login") : console.log("hello world");
+                    }
+                  }}
                   className="bg-blue-500 hover:bg-blue-600 text-white py-2 px-4 rounded-md transition duration-300"
                 >
                   View Course
@@ -61,6 +72,16 @@ const FeaturedCourses = ({ courses, onCourseClick }) => {
           </motion.div>
         ))}
       </div>
+      {visibleCourses < courses.length && (
+        <div className="flex justify-center mt-8">
+          <button
+            onClick={handleLoadMore}
+            className=" text-black border-2 py-2 px-4 rounded-md transition duration-300"
+          >
+            Load More...
+          </button>
+        </div>
+      )}
     </div>
   );
 };

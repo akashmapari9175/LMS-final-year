@@ -14,15 +14,16 @@ const Student_Home = () => {
   const navigate = useNavigate();
   const [courses, setCourses] = useState([]);
   const { courseId } = useParams();
-  const token = localStorage.getItem("token");
+
   useEffect(() => {
-    console.log(token);
-    if (!token) {
-      navigate("/login");
-    } else {
+    const token = localStorage.getItem("token");
+    if (token) {
       navigate("/auth/student-home");
     }
-  }, [navigate, token]);
+    if (!token) {
+      navigate("/login");
+    }
+  }, [navigate]);
 
   useEffect(() => {
     const fetchCourses = async () => {
