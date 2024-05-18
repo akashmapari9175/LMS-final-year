@@ -6,6 +6,7 @@ import HowItWorks from "../../components/HowItWorks";
 import { useNavigate } from "react-router-dom";
 import { useEffect } from "react";
 import Footer from "../../components/Footer";
+import Instructor_Dashboard from "./Instructor_Dashboard";
 const Instructor_Home = () => {
   const navigate = useNavigate();
 
@@ -25,6 +26,7 @@ const Instructor_Home = () => {
       <HowItWorks></HowItWorks>
       <Testimonials></Testimonials>
       <Footer></Footer>
+      <Instructor_Dashboard></Instructor_Dashboard>
     </div>
   );
 };

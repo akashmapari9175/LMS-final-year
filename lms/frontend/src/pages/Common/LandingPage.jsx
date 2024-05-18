@@ -7,6 +7,8 @@ import HowItWorks from "../../components/HowItWorks";
 import Testimonial from "../../components/Testimonials";
 import Footer from "../../components/Footer";
 import axios from "axios";
+import CourseSlider from "../../components/CourseSlider";
+import OfferBanner from "../../components/OfferBanner";
 
 const LandingPage = () => {
   const [courses, setCourses] = useState([]);
@@ -60,8 +62,14 @@ const LandingPage = () => {
 
   return (
     <div>
+      <OfferBanner></OfferBanner>
       <Navbar categories={categories} onCategorySelect={handleCategorySelect} />
       <Banner />
+      <CourseSlider
+        courses={filteredCourses}
+        onCourseClick={handleCourseClick}
+        selectedCategory={selectedCategory}
+      ></CourseSlider>
       <FeaturedCourses
         courses={filteredCourses}
         onCourseClick={handleCourseClick}

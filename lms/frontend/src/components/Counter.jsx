@@ -37,26 +37,28 @@ const Counter = () => {
   }, []);
 
   return (
-    <div className="container mx-auto py-16 md:py-24 px-4 bg-gray-50">
-      <h1 className="text-2xl font-bold mb-20 ml-8 text-center ">
-        Learnify Growth in the Last 2 Months
-      </h1>
-      <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
-        <CounterCard
-          icon={<FaChalkboardTeacher size={40} color="#6366F1" />}
-          title="Instructors"
-          count={instructorsCount}
-        />
-        <CounterCard
-          icon={<FaUserGraduate size={40} color="#10B981" />}
-          title="Students"
-          count={studentsCount}
-        />
-        <CounterCard
-          icon={<FaBook size={40} color="#EF4444" />}
-          title="Courses"
-          count={coursesCount}
-        />
+    <div className="bg-gray-900 py-16 md:py-24">
+      <div className="container mx-auto px-4">
+        <h1 className="text-3xl md:text-4xl font-bold mb-10 text-center text-white">
+          Learnify Growth in the Last 2 Months
+        </h1>
+        <div className="flex flex-col md:flex-row justify-center items-center gap-x-28">
+          <CounterCard
+            icon={<FaChalkboardTeacher size={40} color="#FCD34D" />}
+            title="Instructors"
+            count={instructorsCount}
+          />
+          <CounterCard
+            icon={<FaUserGraduate size={40} color="#6EE7B7" />}
+            title="Students"
+            count={studentsCount}
+          />
+          <CounterCard
+            icon={<FaBook size={40} color="#FF7E7E" />}
+            title="Courses"
+            count={coursesCount}
+          />
+        </div>
       </div>
     </div>
   );
@@ -65,13 +67,13 @@ const Counter = () => {
 const CounterCard = ({ icon, title, count }) => {
   return (
     <motion.div
-      className="counter-card bg-white border border-gray-300 rounded-md shadow-md p-6 cursor-pointer"
+      className="flex flex-col items-center justify-center text-center text-white cursor-pointer"
       whileHover={{ scale: 1.05 }}
       whileTap={{ scale: 0.95 }}
     >
-      <div className="flex items-center justify-center mb-4">{icon}</div>
-      <h2 className="text-lg font-bold mb-2 text-center">{title}</h2>
-      <p className="text-3xl font-bold text-center">{count}</p>
+      <div className="mb-4">{icon}</div>
+      <h2 className="text-lg font-bold mb-2">{title}</h2>
+      <p className="text-3xl font-bold">{count}</p>
     </motion.div>
   );
 };

@@ -7,16 +7,12 @@ const bcrypt = require("bcrypt");
 const jwt = require("jsonwebtoken");
 const Students = require("./models/Students");
 const Instructor = require("./models/Instructor");
-const Course = require("./models/Courses"); // Corrected model name
+const Course = require("./models/Courses");
 const cloudinary = require("cloudinary").v2;
 const Lecture = require("./models/Lectures");
 const multer = require("multer");
 const nodemailer = require("nodemailer");
 const Student = require("./models/Students");
-
-const stripe = require("stripe")(
-  "sk_test_51Obj0YSCbq1NQsLJAnZYP7QPAkruWJpgiCKE3B0lmGnhqgI9lQ01TD987GLMqRABp4PloLBkpjQ66ZvzKZ5UTOa100xdi3MKvl"
-);
 
 const app = express();
 
@@ -555,7 +551,7 @@ app.get("/", async (req, res) => {
   try {
     const courses = await Course.find();
     res.json(courses);
-    console.log(courses);
+    // console.log(courses);
   } catch (error) {
     console.error("Error fetching courses:", error);
     res.status(500).json({ message: "Internal server error" });
@@ -567,7 +563,7 @@ app.post("/send-email", (req, res) => {
 
   // Create a transporter object using the default SMTP transport
   let transporter = nodemailer.createTransport({
-    /* 
+    /*
       Configure your email transport settings here.
       For example, for Gmail, you can use the following:
       */
@@ -778,7 +774,7 @@ app.delete("/course-details/:lectureId", async (req, res) => {
 
     // Delete the lecture
     await Lecture.findByIdAndDelete(lectureId);
-    console.log(lectureId);
+    // console.log(lectureId);
 
     res.status(200).json({ message: "Lecture deleted successfully" });
   } catch (error) {
@@ -788,6 +784,47 @@ app.delete("/course-details/:lectureId", async (req, res) => {
 });
 
 // Route to create a Checkout Session
+
+app.get("/search/:query", async (req, res) => {
+  try {
+    const query = req.params.query; // Access the route parameter
+
+    const regex = new RegExp(query, "i"); // Case-insensitive search
+    const searchResults = await Course.find({ title: regex });
+
+    res.json({ results: searchResults });
+  } catch (error) {
+    console.error("Error fetching search results:", error);
+    res.status(500).json({ error: "Internal Server Error" });
+  }
+});
+
+app.put("/courses/:id", async (req, res) => {
+  try {
+    const updatedCourse = await Course.findByIdAndUpdate(
+      req.params.id,
+      req.body,
+      { new: true }
+    );
+    res.json(updatedCourse);
+  } catch (error) {
+    console.error("Error updating course:", error);
+    res.status(500).json({ message: "Failed to update course" });
+  }
+});
+
+app.get("/courses/:id", async (req, res) => {
+  try {
+    const course = await Course.findById(req.params.id);
+    if (!course) {
+      return res.status(404).json({ message: "Course not found" });
+    }
+    res.json(course);
+  } catch (error) {
+    console.error("Error fetching course:", error);
+    res.status(500).json({ message: "Failed to fetch course" });
+  }
+});
 
 // MongoDB connection
 connectDB(

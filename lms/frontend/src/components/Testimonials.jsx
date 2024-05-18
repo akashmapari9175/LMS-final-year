@@ -1,7 +1,7 @@
 import React from "react";
 import { Carousel } from "react-responsive-carousel";
-import "react-responsive-carousel/lib/styles/carousel.min.css"; // Import carousel styles
-import { FaQuoteLeft } from "react-icons/fa"; // Import quote icon
+import "react-responsive-carousel/lib/styles/carousel.min.css";
+import { FaQuoteLeft } from "react-icons/fa";
 
 const Testimonial = () => {
   return (
@@ -15,7 +15,7 @@ const Testimonial = () => {
           showThumbs={false}
           autoPlay={true}
           interval={5000}
-          stopOnHover={false}
+          stopOnHover={true}
           showStatus={false}
           className="max-w-xl mx-auto"
         >

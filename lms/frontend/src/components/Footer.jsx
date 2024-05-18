@@ -1,35 +1,247 @@
 import React from "react";
+//import { FooterLink2 } from "../../data/footer-links";
+import { Link } from "react-router-dom";
+
+// Images
+//import Logo from "../../assets/Logo/Logo-Full-Light.png";
+
+// Icons
+import { FaFacebook, FaGoogle, FaTwitter, FaYoutube } from "react-icons/fa";
+
+const BottomFooter = ["Privacy Policy", "Cookie Policy", "Terms"];
+const Resources = [
+  "Articles",
+  "Blog",
+  "Chart Sheet",
+  "Code challenges",
+  "Docs",
+  "Projects",
+  "Videos",
+  "Workspaces",
+];
+const Plans = ["Paid memberships", "For students", "Business solutions"];
+const Community = ["Forums", "Chapters", "Events"];
 
 const Footer = () => {
+  const FooterLink2 = [
+    {
+      title: "Subjects",
+      links: [
+        { title: "Al", link: "/al" },
+        { title: "Cloud Computing", link: "/cloud-computing" },
+        { title: "Code Foundations", link: "/code-foundations" },
+        { title: "Computer Science", link: "/computer-science" },
+        { title: "Cybersecurity", link: "/cybersecurity" },
+        { title: "Data Analytics", link: "/data-analytics" },
+        { title: "Data Science", link: "/data-science" },
+        { title: "Data Visualization", link: "/data-visualization" },
+        { title: "Developer Tools", link: "/developer-tools" },
+        { title: "DevOps", link: "/devops" },
+        { title: "Game Development", link: "/game-development" },
+        { title: "IT", link: "/it" },
+        { title: "Machine Learning", link: "/machine-learning" },
+        { title: "Math", link: "/math" },
+        { title: "Mobile Development", link: "/mobile-development" },
+        { title: "Web Design", link: "/web-design" },
+        { title: "Web Development", link: "/web-development" },
+      ],
+    },
+    {
+      title: "Languages",
+      links: [
+        { title: "Bash", link: "/bash" },
+        { title: "C++", link: "/c++" },
+        { title: "C#", link: "/csharp" },
+        { title: "Go", link: "/go" },
+        { title: "HTML & CSS", link: "/html-css" },
+        { title: "Java", link: "/java" },
+        { title: "JavaScript", link: "/javascript" },
+        { title: "Kotlin", link: "/kotlin" },
+        { title: "PHP", link: "/php" },
+        { title: "Python", link: "/python" },
+        { title: "R", link: "/r" },
+        { title: "Ruby", link: "/ruby" },
+        { title: "SQL", link: "/sql" },
+        { title: "Swift", link: "/swift" },
+      ],
+    },
+    {
+      title: "Career building",
+      links: [
+        { title: "Career paths", link: "/career-paths" },
+        { title: "Career services", link: "/career-services" },
+        { title: "Interview prep", link: "/interview-prep" },
+        {
+          title: "Professional certification",
+          link: "/professional-certification",
+        },
+        { title: "-", link: "/hi" },
+        { title: "Full Catalog", link: "/full-catalog" },
+        { title: "Beta Content", link: "/beta-content" },
+      ],
+    },
+  ];
+
   return (
-    <footer className="bg-gray-800 text-white py-6">
-      <div className="container mx-auto px-4">
-        <div className="flex flex-col md:flex-row justify-between items-center">
-          <div className="mb-4 md:mb-0">
-            <h2 className="text-xl font-bold">Learnify</h2>
-            <p className="text-sm">Providing innovative solutions</p>
+    <div className="bg-black text-white">
+      <div className="flex lg:flex-row gap-8 items-center justify-between w-11/12 max-w-maxContent text-richblack-400 leading-6 mx-auto relative py-14">
+        <div className="border-b w-[100%] flex flex-col lg:flex-row pb-5 border-richblack-700">
+          {/* Section 1 */}
+          <div className="lg:w-[50%] flex flex-wrap flex-row justify-between lg:border-r lg:border-richblack-700 pl-3 lg:pr-5 gap-3">
+            <div className="w-[30%] flex flex-col gap-3 lg:w-[30%] mb-7 lg:pl-0">
+              {/* <img
+                src="http://localhost:3001/static/media/FoundingStory.84f2828a5f4a9c08a802.png"
+                alt=""
+                className="object-contain"
+              /> */}
+              <p className="text-2xl font-bold ">Learnify</p>
+              <h1 className="text-richblack-50 font-semibold text-[16px]">
+                Company
+              </h1>
+              <div className="flex flex-col gap-2">
+                {["About", "Careers", "Affiliates"].map((ele, i) => {
+                  return (
+                    <div
+                      key={i}
+                      className="text-[14px] cursor-pointer hover:text-richblack-50 transition-all duration-200"
+                    >
+                      <Link to={ele.toLowerCase()}>{ele}</Link>
+                    </div>
+                  );
+                })}
+              </div>
+              <div className="flex gap-3 text-lg">
+                <FaFacebook />
+                <FaGoogle />
+                <FaTwitter />
+                <FaYoutube />
+              </div>
+              <div></div>
+            </div>
+
+            <div className="w-[48%] lg:w-[30%] mb-7 lg:pl-0">
+              <h1 className="text-richblack-50 font-semibold text-[16px]">
+                Resources
+              </h1>
+
+              <div className="flex flex-col gap-2 mt-2">
+                {Resources.map((ele, index) => {
+                  return (
+                    <div
+                      key={index}
+                      className="text-[14px] cursor-pointer hover:text-richblack-50 transition-all duration-200"
+                    >
+                      <Link to={ele.split(" ").join("-").toLowerCase()}>
+                        {ele}
+                      </Link>
+                    </div>
+                  );
+                })}
+              </div>
+
+              <h1 className="text-richblack-50 font-semibold text-[16px] mt-7">
+                Support
+              </h1>
+              <div className="text-[14px] cursor-pointer hover:text-richblack-50 transition-all duration-200 mt-2">
+                <Link to={"/help-center"}>Help Center</Link>
+              </div>
+            </div>
+
+            <div className="w-[48%] lg:w-[30%] mb-7 lg:pl-0">
+              <h1 className="text-richblack-50 font-semibold text-[16px]">
+                Plans
+              </h1>
+
+              <div className="flex flex-col gap-2 mt-2">
+                {Plans.map((ele, index) => {
+                  return (
+                    <div
+                      key={index}
+                      className="text-[14px] cursor-pointer hover:text-richblack-50 transition-all duration-200"
+                    >
+                      <Link to={ele.split(" ").join("-").toLowerCase()}>
+                        {ele}
+                      </Link>
+                    </div>
+                  );
+                })}
+              </div>
+              <h1 className="text-richblack-50 font-semibold text-[16px] mt-7">
+                Community
+              </h1>
+
+              <div className="flex flex-col gap-2 mt-2">
+                {Community.map((ele, index) => {
+                  return (
+                    <div
+                      key={index}
+                      className="text-[14px] cursor-pointer hover:text-richblack-50 transition-all duration-200"
+                    >
+                      <Link to={ele.split(" ").join("-").toLowerCase()}>
+                        {ele}
+                      </Link>
+                    </div>
+                  );
+                })}
+              </div>
+            </div>
           </div>
-          <div className="flex flex-wrap justify-center md:justify-end">
-            <a href="#" className="text-gray-400 hover:text-white mr-4">
-              About Us
-            </a>
-            <a href="#" className="text-gray-400 hover:text-white mr-4">
-              Services
-            </a>
-            <a href="#" className="text-gray-400 hover:text-white mr-4">
-              Contact Us
-            </a>
-            <a href="#" className="text-gray-400 hover:text-white">
-              Privacy Policy
-            </a>
+
+          {/* Section 2 */}
+          <div className="lg:w-[50%] flex flex-wrap flex-row justify-between pl-3 lg:pl-5 gap-3">
+            {FooterLink2.map((ele, i) => {
+              return (
+                <div key={i} className="w-[48%] lg:w-[30%] mb-7 lg:pl-0">
+                  <h1 className="text-richblack-50 font-semibold text-[16px]">
+                    {ele.title}
+                  </h1>
+                  <div className="flex flex-col gap-2 mt-2">
+                    {ele.links.map((link, index) => {
+                      return (
+                        <div
+                          key={index}
+                          className="text-[14px] cursor-pointer hover:text-richblack-50 transition-all duration-200"
+                        >
+                          <Link to={link.link}>{link.title}</Link>
+                        </div>
+                      );
+                    })}
+                  </div>
+                </div>
+              );
+            })}
           </div>
         </div>
-        <hr className="border-gray-700 my-4" />
-        <p className="text-center text-sm">
-          &copy; {new Date().getFullYear()} Learnify. All rights reserved.
-        </p>
       </div>
-    </footer>
+
+      <div className="flex flex-row items-center justify-between w-11/12 max-w-maxContent text-richblack-400 mx-auto  pb-14 text-sm">
+        {/* Section 1 */}
+        <div className="flex justify-between lg:items-start items-center flex-col lg:flex-row gap-3 w-full">
+          <div className="flex flex-row">
+            {BottomFooter.map((ele, i) => {
+              return (
+                <div
+                  key={i}
+                  className={` ${
+                    BottomFooter.length - 1 === i
+                      ? ""
+                      : "border-r border-richblack-700 cursor-pointer hover:text-richblack-50 transition-all duration-200"
+                  } px-3 `}
+                >
+                  <Link to={ele.split(" ").join("-").toLocaleLowerCase()}>
+                    {ele}
+                  </Link>
+                </div>
+              );
+            })}
+          </div>
+
+          <div className="text-center">
+            Made with ❤️ CodeHelp © 2024 Learnify
+          </div>
+        </div>
+      </div>
+    </div>
   );
 };
 

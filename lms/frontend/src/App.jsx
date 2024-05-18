@@ -19,6 +19,8 @@ import ForgotPassword from "./pages/Common/ForgotPassword";
 import Course_Detailss from "./pages/Student/Course_Detailss";
 import Enrolled_Courses from "./pages/Student/Enrolled_Courses";
 import Payment from "./pages/Student/Payment";
+import SearchResults from "./pages/Common/SearchResults";
+import Edit_Course from "./pages/Instructor/Edit_Course";
 
 function App() {
   // const stripePromise = loadStripe(
@@ -33,6 +35,7 @@ function App() {
         <Route path="/contactus" element={<ContactUs></ContactUs>}></Route>
         <Route path="/login" element={<Login></Login>}></Route>
         <Route path="/register" element={<Register></Register>}></Route>
+        <Route path="/search/:query" element={<SearchResults />} />
 
         {/* student routes */}
         <Route path="/auth/student-home" element={<Student_Home />}></Route>
@@ -58,11 +61,16 @@ function App() {
           path="/instructor-profile"
           element={<Instructor_Profile />}
         ></Route>
+
         <Route
           path="/update-instructor-profile"
           element={<UpdateInstructorProfile />}
         ></Route>
         <Route path="/create-course" element={<Add_Course />}></Route>
+        <Route
+          path="/edit-course/:id" // Assuming you want to use '/edit-course/:id' as the route path
+          element={<Edit_Course></Edit_Course>}
+        />
         <Route path="/manage-courses" element={<Manage_Courses />}></Route>
         <Route path="/add-lecture/:courseId" element={<AddLecture />} />
         <Route path="/course-details/:courseId" element={<Course_Details />} />

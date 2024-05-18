@@ -12,12 +12,18 @@ const Banner = () => {
       <p className="text-lg text-white mb-8 opacity-0 animate-fade-in-up">
         Start your learning journey today!
       </p>
-      <button
+      {/* <button
         onClick={handleBannerButtonClick}
         className="bg-white text-blue-500 hover:bg-blue-400 text-lg font-semibold px-8 py-3 rounded-full shadow-md transition duration-300 transform hover:scale-105"
       >
         Explore Courses
-      </button>
+      </button> */}
+
+      <a href="#featured-courses">
+        <button className="bg-white text-blue-500 hover:bg-blue-400 text-lg font-semibold px-8 py-3 rounded-full shadow-md transition duration-300 transform hover:scale-105">
+          Explore Courses
+        </button>
+      </a>
     </div>
   );
 };

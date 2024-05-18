@@ -21,7 +21,8 @@ const Add_Course = () => {
   const [toast, setToast] = useState(null);
   const handleChange = (e) => {
     const { name, value } = e.target;
-    setCourseData({ ...courseData, [name]: value });
+    const normalizedValue = name === "category" ? value.toLowerCase() : value;
+    setCourseData({ ...courseData, [name]: normalizedValue });
   };
 
   const handleImageChange = (e) => {
@@ -162,6 +163,24 @@ const Add_Course = () => {
               </div>
 
               {/* Course Category */}
+              {/* <div className="mb-4">
+                <label
+                  htmlFor="category"
+                  className="block text-gray-700 text-sm font-bold mb-2"
+                >
+                  Course Category
+                </label>
+                <input
+                  type="text"
+                  id="category"
+                  name="category"
+                  value={courseData.category}
+                  onChange={handleChange}
+                  className="input-field"
+                  placeholder="Enter course category"
+                />
+              </div> */}
+
               <div className="mb-4">
                 <label
                   htmlFor="category"

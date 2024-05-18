@@ -8,11 +8,21 @@ import Testimonials from "../../components/Testimonials";
 import HowItWorks from "../../components/HowItWorks";
 import Footer from "../../components/Footer";
 import { useParams } from "react-router-dom";
+import Navbar from "../../components/Navbar";
 
 const Student_Home = () => {
   const navigate = useNavigate();
   const [courses, setCourses] = useState([]);
   const { courseId } = useParams();
+  const token = localStorage.getItem("token");
+  useEffect(() => {
+    console.log(token);
+    if (!token) {
+      navigate("/login");
+    } else {
+      navigate("/auth/student-home");
+    }
+  }, [navigate, token]);
 
   useEffect(() => {
     const fetchCourses = async () => {
