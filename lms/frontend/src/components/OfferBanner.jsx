@@ -15,7 +15,7 @@ const OfferBanner = () => {
           <p className="m-0 text-lg">
             🎉 Special Offer! Enroll now and get 50% off on all courses! Use
             code:
-            <span className="font-bold"> LEARN50</span>
+            <span className="font-bold"> LEARN5000</span>
           </p>
 
           <button className="ml-4 text-xl text-gray-700" onClick={handleClose}>
