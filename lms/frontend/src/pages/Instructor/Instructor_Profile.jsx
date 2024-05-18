@@ -23,7 +23,7 @@ const Instructor_Profile = () => {
           },
         }
       );
-
+      console.log(response.data);
       setInstructorData(response.data);
     } catch (error) {
       console.log("Error fetching instructor data:", error.message);
@@ -66,6 +66,16 @@ const Instructor_Profile = () => {
                 </p>
                 <p className="text-lg">
                   <strong>Email:</strong> {instructorData.email}
+                </p>
+                <p className="text-lg">
+                  <strong>Password:</strong>
+                  <button
+                    type="button"
+                    className="text-white bg-gradient-to-r from-blue-500 via-blue-600 to-blue-700 hover:bg-gradient-to-br focus:ring-4 focus:outline-none focus:ring-blue-300 dark:focus:ring-blue-800 font-medium rounded-lg text-sm px-5 py-2.5 text-center me-2 mb-2 ml-4"
+                    onClick={handleUpdateProfile}
+                  >
+                    Update Password
+                  </button>
                 </p>
                 <p className="text-lg">
                   <strong>Contact Number:</strong>{" "}
