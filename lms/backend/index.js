@@ -145,7 +145,7 @@ app.post("/register", async (req, res) => {
     // Save the new user to the database
     await newUser.save();
 
-    res.status(201).json({ message: "Registered successfully!" });
+    res.status(201).json({ mesfsage: "Registered successfully!" });
   } catch (error) {
     console.error("Error registering user:", error);
     res
@@ -174,6 +174,7 @@ app.post("/login", async (req, res) => {
     }
 
     // Generate a JWT token
+    // this is jwt token 
     const token = jwt.sign({ userId: user._id, email }, secretKey, {
       expiresIn: "7d",
     });
@@ -623,14 +624,22 @@ const otpStorage = {};
 
 // Endpoint to handle sending OTP
 app.post("/send-otp", async (req, res) => {
-  const { email } = req.body;
+  const { email,userType } = req.body;
 
   try {
     // Check if the email exists in the database
-    const student = await Student.findOne({ email });
-    if (!student) {
-      return res.status(404).json({ message: "student not found." });
+    const user = await (userType === "student"
+      ? Students.findOne({ email })
+      : Instructor.findOne({ email }));
+
+    if (!user) {
+      return res.status(401).json({ error: "Invalid credentials" });
     }
+    // our preveous code only for the student
+    // const student = await Student.findOne({ email });
+    // if (!student) {
+    //   return res.status(404).json({ message: "student not found." });
+    // }
 
     // Generate a 4-digit code
     const otp = randomize("0", 4);
@@ -664,14 +673,21 @@ app.post("/send-otp", async (req, res) => {
 
 // Assuming this is the correct route for handling OTP verification
 app.post("/verify-otp", async (req, res) => {
-  const { email, otp, newPassword } = req.body;
+  const { email, otp, newPassword,userType } = req.body;
 
   try {
-    // Find the user by email
-    const student = await Student.findOne({ email });
-    if (!student) {
-      return res.status(404).json({ message: "User not found." });
+    const user = await (userType === "student"
+      ? Students.findOne({ email })
+      : Instructor.findOne({ email }));
+
+    if (!user) {
+      return res.status(401).json({ error: "Invalid credentials" });
     }
+    // Find the user by email  // thsi is our previous code only for the student 
+    // const student = await Student.findOne({ email });
+    // if (!student) {
+    //   return res.status(404).json({ message: "User not found." });
+    // }
 
     // Retrieve the OTP from temporary storage
     const storedOtp = otpStorage[email];
@@ -690,9 +706,10 @@ app.post("/verify-otp", async (req, res) => {
 
     // Update the user's password
     const hashedPassword = await bcrypt.hash(newPassword, 10);
-    student.password = hashedPassword;
+    user.password = hashedPassword;
 
-    await student.save();
+    // await student.save();
+      await user.save();
 
     // For demonstration purposes, we'll just send a success message
     res.json({ message: "Password reset successful." });
