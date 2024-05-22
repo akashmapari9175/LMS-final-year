@@ -10,7 +10,7 @@ const CourseSlider = ({ courses, onCourseClick }) => {
   const navigate = useNavigate();
 
   const handleEnrollClick = async (courseId) => {
-    navigate(`/payment/${courseId}`);
+    navigate(`/login`);
   };
 
   // Create a Set to store unique course IDs

@@ -13,13 +13,14 @@ const Lecture = require("./models/Lectures");
 const multer = require("multer");
 const nodemailer = require("nodemailer");
 const Student = require("./models/Students");
+const Enrollment = require("./models/Enrollment");
 
 const app = express();
 
 app.use(express.json());
 app.use(cors());
 
-const secretKey = process.env.SECRETKEY;
+const secretKey = process.env.secretKey;
 
 const verifyToken = (req, res, next) => {
   const token = req.headers.authorization;
@@ -174,7 +175,7 @@ app.post("/login", async (req, res) => {
     }
 
     // Generate a JWT token
-    // this is jwt token 
+    // this is jwt token
     const token = jwt.sign({ userId: user._id, email }, secretKey, {
       expiresIn: "7d",
     });
@@ -283,7 +284,6 @@ app.put("/update-instructor-profile", verifyToken, async (req, res) => {
 
     // Update the password field in updatedFields with the hashed password
     updatedFields.password = hashedPassword;
-
 
     const instructor = await Instructor.findByIdAndUpdate(
       instructorId,
@@ -631,7 +631,7 @@ const otpStorage = {};
 
 // Endpoint to handle sending OTP
 app.post("/send-otp", async (req, res) => {
-  const { email,userType } = req.body;
+  const { email, userType } = req.body;
 
   try {
     // Check if the email exists in the database
@@ -680,7 +680,7 @@ app.post("/send-otp", async (req, res) => {
 
 // Assuming this is the correct route for handling OTP verification
 app.post("/verify-otp", async (req, res) => {
-  const { email, otp, newPassword,userType } = req.body;
+  const { email, otp, newPassword, userType } = req.body;
 
   try {
     const user = await (userType === "student"
@@ -690,7 +690,7 @@ app.post("/verify-otp", async (req, res) => {
     if (!user) {
       return res.status(401).json({ error: "Invalid credentials" });
     }
-    // Find the user by email  // thsi is our previous code only for the student 
+    // Find the user by email  // thsi is our previous code only for the student
     // const student = await Student.findOne({ email });
     // if (!student) {
     //   return res.status(404).json({ message: "User not found." });
@@ -716,7 +716,7 @@ app.post("/verify-otp", async (req, res) => {
     user.password = hashedPassword;
 
     // await student.save();
-      await user.save();
+    await user.save();
 
     // For demonstration purposes, we'll just send a success message
     res.json({ message: "Password reset successful." });
@@ -847,6 +847,63 @@ app.get("/courses/:id", async (req, res) => {
   } catch (error) {
     console.error("Error fetching course:", error);
     res.status(500).json({ message: "Failed to fetch course" });
+  }
+});
+
+app.get("/courses/:courseId", async (req, res) => {
+  Course.findById(req.params.id)
+    .then((course) => res.json(course))
+    .catch((err) => res.status(400).json("Error: " + err));
+});
+
+app.post("/api/enroll", verifyToken, async (req, res) => {
+  const studentId = req.user.userId; // Assuming userId is set in the token
+
+  const { courseId } = req.body;
+
+  try {
+    // Check if the student is already enrolled in the course
+    const existingEnrollment = await Enrollment.findOne({
+      student: studentId,
+      course: courseId,
+    });
+
+    if (existingEnrollment) {
+      return res
+        .status(400)
+        .json({ message: "Already enrolled in this course" });
+    }
+
+    // Create a new enrollment
+    const newEnrollment = new Enrollment({
+      student: studentId,
+      course: courseId,
+    });
+
+    await newEnrollment.save();
+
+    res
+      .status(201)
+      .json({ message: "Enrollment successful", enrollment: newEnrollment });
+  } catch (error) {
+    console.error("Error creating enrollment:", error);
+    res.status(500).json({ message: "Server Error" });
+  }
+});
+
+app.get("/api/enrolled-courses", verifyToken, async (req, res) => {
+  const studentId = req.user.userId;
+
+  try {
+    const enrollments = await Enrollment.find({ student: studentId }).populate(
+      "course"
+    );
+    const courses = enrollments.map((enrollment) => enrollment.course);
+
+    res.status(200).json(courses);
+  } catch (error) {
+    console.error("Error fetching enrolled courses:", error);
+    res.status(500).json({ message: "Server Error" });
   }
 });
 

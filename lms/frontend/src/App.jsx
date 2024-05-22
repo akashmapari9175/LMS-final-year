@@ -21,12 +21,13 @@ import Enrolled_Courses from "./pages/Student/Enrolled_Courses";
 import Payment from "./pages/Student/Payment";
 import SearchResults from "./pages/Common/SearchResults";
 import Edit_Course from "./pages/Instructor/Edit_Course";
+import Payment_Success from "./pages/Student/Payment_Success";
 
 function App() {
-  // const stripePromise = loadStripe(
-  //   "pk_test_51Obj0YSCbq1NQsLJooddt1DFt4nFGhogXEwlW0CaRrrBUcRJmjZ6023t49uLmTWHjfcN6n9Ur2Y8icalZ7wewUs800EOVPlaEd"
-  // );
-
+  const handleCourseClick = (courseId) => {
+    // Redirect to the course details page
+    // navigate(`/course-details/${courseId}`);
+  };
   return (
     <>
       <Routes>
@@ -47,9 +48,17 @@ function App() {
         ></Route>
         <Route
           path="/student/enrolled-courses"
-          element={<Enrolled_Courses></Enrolled_Courses>}
+          element={
+            <Enrolled_Courses
+              onCourseClick={handleCourseClick}
+            ></Enrolled_Courses>
+          }
         ></Route>
-        <Route path="/payment/:courseId" element={<Payment></Payment>}></Route>
+        <Route path="/payment" element={<Payment></Payment>}></Route>
+        <Route
+          path="/payment-success/:courseId"
+          element={<Payment_Success></Payment_Success>}
+        ></Route>
 
         {/* instructor routes */}
         <Route

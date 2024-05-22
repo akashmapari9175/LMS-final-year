@@ -13,7 +13,6 @@ const UpdateProfile = () => {
     gender: "",
     fieldOfInterest: "",
     bio: "",
-    password: "",
   });
 
   // Function to fetch user data
@@ -39,7 +38,6 @@ const UpdateProfile = () => {
         gender: userData.gender,
         fieldOfInterest: userData.fieldOfInterest,
         bio: userData.bio,
-        password: userData.password,
       });
     } catch (error) {
       console.error("Error fetching user data:", error.message);
