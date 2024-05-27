@@ -58,7 +58,7 @@ const EnrolledCourses = () => {
                   />
                 </div>
                 <h3 className="text-lg font-bold mt-4">{course.title}</h3>
-                <p className="text-gray-600">{course.description}</p>
+                {/* <p className="text-gray-600">{course.description}</p> */}
                 <p className="text-gray-600">Price: ₹{course.price}</p>
                 <p className="text-gray-600">Duration: {course.duration}</p>
 

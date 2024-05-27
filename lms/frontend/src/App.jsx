@@ -22,6 +22,7 @@ import Payment from "./pages/Student/Payment";
 import SearchResults from "./pages/Common/SearchResults";
 import Edit_Course from "./pages/Instructor/Edit_Course";
 import Payment_Success from "./pages/Student/Payment_Success";
+import ViewCourse from "./pages/Common/ViewCourse";
 
 function App() {
   const handleCourseClick = (courseId) => {
@@ -37,6 +38,7 @@ function App() {
         <Route path="/login" element={<Login></Login>}></Route>
         <Route path="/register" element={<Register></Register>}></Route>
         <Route path="/search/:query" element={<SearchResults />} />
+        <Route path="/course/:courseId" element={<ViewCourse />} />
 
         {/* student routes */}
         <Route path="/auth/student-home" element={<Student_Home />}></Route>

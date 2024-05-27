@@ -10,6 +10,14 @@ const FeaturedCourses = ({ courses, onCourseClick }) => {
   const navigate = useNavigate();
   const [visibleCourses, setVisibleCourses] = useState(6);
 
+  const handleViewCourseClick = (courseId) => {
+    if (!token || token === "") {
+      navigate(`/course/${courseId}`);
+    } else {
+      onCourseClick(courseId);
+    }
+  };
+
   const handleEnrollClick = async (course) => {
     if (!token || token === "") {
       navigate("/login");
@@ -109,7 +117,7 @@ const FeaturedCourses = ({ courses, onCourseClick }) => {
               <p className="text-gray-600 mb-2">Duration: {course.duration}</p>
               <div className="flex justify-between mt-auto">
                 <button
-                  onClick={() => onCourseClick(course._id)}
+                  onClick={() => handleViewCourseClick(course._id)}
                   className="bg-blue-500 hover:bg-blue-600 text-white py-2 px-4 rounded-md transition duration-300 mr-2"
                 >
                   View Course

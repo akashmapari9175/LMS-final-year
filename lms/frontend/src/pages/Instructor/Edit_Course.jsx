@@ -2,6 +2,9 @@ import React, { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import axios from "axios";
 import { useParams } from "react-router-dom";
+import ReactQuill from "react-quill";
+import "react-quill/dist/quill.snow.css";
+import InstructorNavbar from "../../components/InstructorNavbar";
 
 const Edit_Course = () => {
   const { id } = useParams(); // Assuming you're using useParams to retrieve the course ID from the URL
@@ -46,6 +49,20 @@ const Edit_Course = () => {
     }));
   };
 
+  const handleDescriptionChange = (value) => {
+    setCourse((prevCourse) => ({
+      ...prevCourse,
+      description: value,
+    }));
+  };
+
+  const handlePrerequisitesChange = (value) => {
+    setCourse((prevCourse) => ({
+      ...prevCourse,
+      prerequisites: value,
+    }));
+  };
+
   if (loading) {
     return <p>Loading...</p>;
   }
@@ -55,107 +72,105 @@ const Edit_Course = () => {
   }
 
   return (
-    <div className="container mx-auto p-4">
-      <h2 className="text-3xl font-semibold mb-4">Edit Course</h2>
-      <form onSubmit={handleSubmit} className="space-y-4">
-        <div className="flex flex-col">
-          <label htmlFor="title" className="text-lg font-medium mb-1">
-            Course Title:
-          </label>
-          <input
-            type="text"
-            name="title"
-            id="title"
-            value={course.title || ""}
-            onChange={handleChange}
-            className="border border-gray-300 rounded-md px-3 py-2 focus:outline-none focus:border-blue-500"
-          />
-        </div>
-        <div className="flex flex-col">
-          <label htmlFor="description" className="text-lg font-medium mb-1">
-            Course Description:
-          </label>
-          <textarea
-            name="description"
-            id="description"
-            value={course.description || ""}
-            onChange={handleChange}
-            className="border border-gray-300 rounded-md px-3 py-2 focus:outline-none focus:border-blue-500"
-          />
-        </div>
-        <div className="flex flex-col">
-          <label htmlFor="category" className="text-lg font-medium mb-1">
-            Course Category:
-          </label>
-          <input
-            type="text"
-            name="category"
-            id="category"
-            value={course.category || ""}
-            onChange={handleChange}
-            className="border border-gray-300 rounded-md px-3 py-2 focus:outline-none focus:border-blue-500"
-          />
-        </div>
-        <div className="flex flex-col">
-          <label htmlFor="duration" className="text-lg font-medium mb-1">
-            Course Duration:
-          </label>
-          <input
-            type="text"
-            name="duration"
-            id="duration"
-            value={course.duration || ""}
-            onChange={handleChange}
-            className="border border-gray-300 rounded-md px-3 py-2 focus:outline-none focus:border-blue-500"
-          />
-        </div>
-        <div className="flex flex-col">
-          <label htmlFor="price" className="text-lg font-medium mb-1">
-            Course Price:
-          </label>
-          <input
-            type="text"
-            name="price"
-            id="price"
-            value={course.price || ""}
-            onChange={handleChange}
-            className="border border-gray-300 rounded-md px-3 py-2 focus:outline-none focus:border-blue-500"
-          />
-        </div>
-        <div className="flex flex-col">
-          <label htmlFor="prerequisites" className="text-lg font-medium mb-1">
-            Course Prerequisites:
-          </label>
-          <input
-            type="text"
-            name="prerequisites"
-            id="prerequisites"
-            value={course.prerequisites || ""}
-            onChange={handleChange}
-            className="border border-gray-300 rounded-md px-3 py-2 focus:outline-none focus:border-blue-500"
-          />
-        </div>
-        <div className="flex flex-col">
-          <label htmlFor="imageUrl" className="text-lg font-medium mb-1">
-            Course Image URL:
-          </label>
-          <input
-            type="text"
-            name="imageUrl"
-            id="imageUrl"
-            value={course.imageUrl || ""}
-            onChange={handleChange}
-            className="border border-gray-300 rounded-md px-3 py-2 focus:outline-none focus:border-blue-500"
-          />
-        </div>
-        <button
-          type="submit"
-          className="bg-blue-500 hover:bg-blue-600 text-white py-2 px-4 rounded-md transition duration-300"
-        >
-          Update Course
-        </button>
-      </form>
-    </div>
+    <>
+      <InstructorNavbar></InstructorNavbar>
+      <h2 className="text-3xl m-8 font-semibold mb-4">Edit Course</h2>
+      <div className="container w-[700px] border-2 rounded-lg my-8 p-8 mx-auto ">
+        <form onSubmit={handleSubmit} className="space-y-4">
+          <div className="flex flex-col">
+            <label htmlFor="title" className="text-lg font-medium mb-1">
+              Course Title:
+            </label>
+            <input
+              type="text"
+              name="title"
+              id="title"
+              value={course.title || ""}
+              onChange={handleChange}
+              className="border border-gray-300 rounded-md px-3 py-2 focus:outline-none focus:border-blue-500"
+            />
+          </div>
+          <div className="flex flex-col">
+            <label htmlFor="description" className="text-lg font-medium mb-1">
+              Course Description:
+            </label>
+            <ReactQuill
+              theme="snow"
+              value={course.description || ""}
+              onChange={handleDescriptionChange}
+            />
+          </div>
+          <div className="flex flex-col">
+            <label htmlFor="category" className="text-lg font-medium mb-1">
+              Course Category:
+            </label>
+            <input
+              type="text"
+              name="category"
+              id="category"
+              value={course.category || ""}
+              onChange={handleChange}
+              className="border border-gray-300 rounded-md px-3 py-2 focus:outline-none focus:border-blue-500"
+            />
+          </div>
+          <div className="flex flex-col">
+            <label htmlFor="duration" className="text-lg font-medium mb-1">
+              Course Duration:
+            </label>
+            <input
+              type="text"
+              name="duration"
+              id="duration"
+              value={course.duration || ""}
+              onChange={handleChange}
+              className="border border-gray-300 rounded-md px-3 py-2 focus:outline-none focus:border-blue-500"
+            />
+          </div>
+          <div className="flex flex-col">
+            <label htmlFor="price" className="text-lg font-medium mb-1">
+              Course Price:
+            </label>
+            <input
+              type="text"
+              name="price"
+              id="price"
+              value={course.price || ""}
+              onChange={handleChange}
+              className="border border-gray-300 rounded-md px-3 py-2 focus:outline-none focus:border-blue-500"
+            />
+          </div>
+          <div className="flex flex-col">
+            <label htmlFor="prerequisites" className="text-lg font-medium mb-1">
+              Course Prerequisites:
+            </label>
+            <ReactQuill
+              theme="snow"
+              value={course.prerequisites || ""}
+              onChange={handlePrerequisitesChange}
+            />
+          </div>
+          <div className="flex flex-col">
+            <label htmlFor="imageUrl" className="text-lg font-medium mb-1">
+              Course Image URL:
+            </label>
+            <input
+              type="text"
+              name="imageUrl"
+              id="imageUrl"
+              value={course.imageUrl || ""}
+              onChange={handleChange}
+              className="border border-gray-300 rounded-md px-3 py-2 focus:outline-none focus:border-blue-500"
+            />
+          </div>
+          <button
+            type="submit"
+            className="bg-blue-500 hover:bg-blue-600 text-white py-2 px-4 rounded-md transition duration-300"
+          >
+            Update Course
+          </button>
+        </form>
+      </div>
+    </>
   );
 };
 

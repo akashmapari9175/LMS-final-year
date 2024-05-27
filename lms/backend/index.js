@@ -907,6 +907,17 @@ app.get("/api/enrolled-courses", verifyToken, async (req, res) => {
   }
 });
 
+app.get("/api/course/:id", async (req, res) => {
+  try {
+    const course = await Course.findById(req.params.id)
+      .populate("instructor")
+      .populate("lectures");
+    res.json(course);
+  } catch (error) {
+    res.status(500).json({ message: "Error fetching course data" });
+  }
+});
+
 // MongoDB connection
 connectDB(
   "mongodb+srv://akashmapari:root@cluster0.3bxf127.mongodb.net/?retryWrites=true&w=majority&appName=lms"
