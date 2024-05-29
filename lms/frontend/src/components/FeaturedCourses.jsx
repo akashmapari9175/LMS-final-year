@@ -10,11 +10,30 @@ const FeaturedCourses = ({ courses, onCourseClick }) => {
   const navigate = useNavigate();
   const [visibleCourses, setVisibleCourses] = useState(6);
 
-  const handleViewCourseClick = (courseId) => {
+  const handleViewCourseClick = async (courseId) => {
     if (!token || token === "") {
       navigate(`/course/${courseId}`);
-    } else {
-      onCourseClick(courseId);
+      return;
+    }
+
+    try {
+      const response = await axios.get(
+        `http://localhost:5000/api/check-enrollment/${courseId}`,
+        {
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+        }
+      );
+
+      if (response.data.isEnrolled) {
+        onCourseClick(courseId);
+      } else {
+        alert("Please enroll in the course first.");
+      }
+    } catch (error) {
+      console.error("Error checking enrollment:", error);
+      alert("An error occurred while checking enrollment status.");
     }
   };
 
@@ -38,7 +57,7 @@ const FeaturedCourses = ({ courses, onCourseClick }) => {
 
         axios
           .post(
-            "http://localhost:5000/api/enroll", // Ensure this matches your backend URL
+            "http://localhost:5000/api/enroll",
             { courseId },
             {
               headers: {
@@ -138,7 +157,7 @@ const FeaturedCourses = ({ courses, onCourseClick }) => {
         <div className="flex justify-center mt-8">
           <button
             onClick={handleLoadMore}
-            className=" text-black border-2 py-2 px-4 rounded-md transition duration-300"
+            className="text-black border-2 py-2 px-4 rounded-md transition duration-300"
           >
             Load More...
           </button>

@@ -918,6 +918,25 @@ app.get("/api/course/:id", async (req, res) => {
   }
 });
 
+app.get("/api/check-enrollment/:courseId", verifyToken, async (req, res) => {
+  const { courseId } = req.params;
+  try {
+    // Check if the user is enrolled in the course
+    const enrollment = await Enrollment.findOne({
+      courseId,
+      userId: req.user.userId,
+    });
+    if (enrollment) {
+      return res.status(200).json({ isEnrolled: true });
+    } else {
+      return res.status(200).json({ isEnrolled: false });
+    }
+  } catch (error) {
+    console.error("Error checking enrollment:", error);
+    return res.status(500).json({ message: "Internal Server Error" });
+  }
+});
+
 // MongoDB connection
 connectDB(
   "mongodb+srv://akashmapari:root@cluster0.3bxf127.mongodb.net/?retryWrites=true&w=majority&appName=lms"

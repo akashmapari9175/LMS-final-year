@@ -1,4 +1,3 @@
-// // export default Course_Details;
 import React, { useState, useEffect } from "react";
 import axios from "axios";
 import { useParams } from "react-router-dom";
@@ -7,7 +6,7 @@ import Loader from "../../components/Loader";
 import { RxCross2 } from "react-icons/rx";
 import { FaCheckDouble } from "react-icons/fa";
 
-const Course_Details = () => {
+const Course_Detailss = () => {
   const { courseId } = useParams();
   const [sections, setSections] = useState([]);
   const [loading, setLoading] = useState(true);
@@ -175,4 +174,4 @@ const Course_Details = () => {
   );
 };
 
-export default Course_Details;
+export default Course_Detailss;
